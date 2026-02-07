@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlphaSignals - AI-Powered Trading Signals</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #111827;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Background Trading Elements */
+        .bg-trading-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.02;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .trading-line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #000000, transparent);
+            transform-origin: left;
+        }
+
+        .trading-dot {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background-color: #000000;
+            border-radius: 50%;
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: #000000;
+            color: #ffffff;
+            padding: 1.2rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .logo-image {
+            width: 42px;
+            height: 42px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 2px solid #10b981;
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: white;
+        }
+
+        .logo-text span {
+            color: #10b981;
+            background: linear-gradient(135deg, #10b981, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s;
+            padding: 8px 0;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #10b981, #3b82f6);
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        nav a:hover {
+            color: #10b981;
+        }
+
+        .mobile-menu {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Hero Section - Enhanced */
+        .hero {
+            padding: 6rem 0 5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 60%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.05) 0%, transparent 70%);
+            z-index: 0;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 5rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-text h1 {
+            font-size: 56px;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .hero-text h1 .gradient-text {
+            background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-text p {
+            font-size: 20px;
+            margin-bottom: 2.5rem;
+            color: #4b5563;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #000000 0%, #111827 100%);
+            color: #ffffff;
+            padding: 16px 36px;
+            border-radius: 10px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s;
+            border: none;
+            font-size: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .cta-button.telegram {
+            background: linear-gradient(135deg, #0088cc 0%, #006699 100%);
+        }
+
+        .cta-button.telegram:hover {
+            background: linear-gradient(135deg, #0099e6 0%, #0088cc 100%);
+        }
+
+        .cta-button.secondary {
+            background: transparent;
+            color: #000000;
+            border: 2px solid #000000;
+        }
+
+        .cta-button.secondary:hover {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .hero-visual {
+            position: relative;
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 300px;
+        }
+
+        .ai-visualization {
+            text-align: center;
+            width: 100%;
+        }
+
+        .ai-icon {
+            font-size: 64px;
+            margin-bottom: 1.5rem;
+            color: #10b981;
+            animation: pulse 2s infinite;
+        }
+
+        .ai-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            width: 100%;
+        }
+
+        .ai-stat {
+            text-align: center;
+            padding: 1.5rem;
+            background: #f9fafb;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s;
+        }
+
+        .ai-stat:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            border-color: #10b981;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Features Section */
+        .features {
+            padding: 5rem 0;
+            background-color: #ffffff;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-size: 42px;
+            margin-bottom: 1rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .section-title p {
+            color: #6b7280;
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 18px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background-color: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 2.5rem;
+            transition: all 0.4s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #10b981, #3b82f6);
+            transform: scaleX(0);
+            transition: transform 0.4s;
+            transform-origin: left;
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #10b981, #3b82f6);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            color: white;
+            font-size: 28px;
+        }
+
+        .feature-card h3 {
+            font-size: 24px;
+            margin-bottom: 1rem;
+            color: #111827;
+        }
+
+        .feature-card p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            padding: 8px 0;
+            color: #4b5563;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-list li i {
+            color: #10b981;
+            font-size: 14px;
+        }
+
+        /* Trading Methodology */
+        .methodology {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+        }
+
+        .methodology-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .method-step {
+            text-align: center;
+            padding: 2.5rem;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e7eb;
+            transition: transform 0.3s;
+        }
+
+        .method-step:hover {
+            transform: translateY(-5px);
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #000000, #111827);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 800;
+            margin: 0 auto 1.5rem;
+        }
+
+        .method-step h3 {
+            font-size: 22px;
+            margin-bottom: 1rem;
+            color: #111827;
+        }
+
+        .method-step p {
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        /* Pricing Section */
+        .pricing {
+            padding: 5rem 0;
+            background-color: #ffffff;
+        }
+
+        .pricing-header {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .pricing-subtitle {
+            color: #6b7280;
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            text-align: center;
+        }
+
+        .pricing-cards {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .pricing-card {
+            background-color: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 20px;
+            padding: 3rem;
+            width: 380px;
+            text-align: center;
+            transition: all 0.4s;
+            position: relative;
+        }
+
+        .pricing-card.featured {
+            border-color: #000000;
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .plan-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #10b981, #3b82f6);
+            color: white;
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .plan-name {
+            font-weight: 800;
+            font-size: 24px;
+            margin-bottom: 1rem;
+            color: #111827;
+        }
+
+        .plan-price {
+            font-size: 56px;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: #111827;
+        }
+
+        .plan-period {
+            color: #6b7280;
+            font-size: 16px;
+            margin-bottom: 2rem;
+        }
+
+        .plan-savings {
+            background-color: #10b98110;
+            color: #10b981;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 2rem;
+            border: 1px solid #10b98130;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .plan-features li {
+            padding: 12px 0;
+            border-bottom: 1px solid #f3f4f6;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+
+        .plan-features i {
+            color: #10b981;
+            font-size: 16px;
+        }
+
+        .feature-disabled {
+            opacity: 0.5;
+        }
+
+        .feature-disabled i {
+            color: #9ca3af;
+        }
+
+        /* Minimal Footer */
+        .minimal-footer {
+            background-color: #000000;
+            color: #ffffff;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .minimal-footer .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .footer-logo {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-logo span {
+            color: #10b981;
+        }
+
+        .footer-tagline {
+            color: #d1d5db;
+            font-size: 16px;
+            max-width: 600px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .footer-contact {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-bottom: 1.5rem;
+        }
+
+        .copyright {
+            color: #6b7280;
+            font-size: 13px;
+            border-top: 1px solid #374151;
+            padding-top: 1.5rem;
+            width: 100%;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 3rem;
+            }
+
+            .hero-visual {
+                max-width: 600px;
+                margin: 0 auto;
+            }
+
+            .hero-text h1 {
+                font-size: 42px;
+            }
+
+            .ai-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .hero-text h1 {
+                font-size: 36px;
+            }
+
+            .features-grid, .methodology-steps {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-cards {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .pricing-card {
+                width: 100%;
+                max-width: 400px;
+            }
+
+            .pricing-card.featured {
+                transform: none;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+            }
+
+            .cta-button {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .ai-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Trading Elements -->
+    <div class="bg-trading-elements" id="bgElements"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="#home" class="logo">
+                    <img src="https://chatgpt.com/backend-api/estuary/content?id=file_00000000e71c71f4b381ff2513383ce1&ts=491795&p=fs&cid=1&sig=4cb616d258195901dfa7d2fdbdc8c3ca63ac93505149b4501ebaa49db4b55a5c&v=0" 
+                         alt="AlphaSignals Logo" 
+                         class="logo-image"
+                         onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDIiIGhlaWdodD0iNDIiIHZpZXdCb3g9IjAgMCA0MiA0MiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQyIiBoZWlnaHQ9IjQyIiByeD0iOCIgZmlsbD0idXJsKCNwYWludDBfbGluZWFyXzQ2XzEwOTkpIi8+CjxwYXRoIGQ9Ik0xMSAyMUwzMSAyMUwzMSAzMUwxMSAzMUwxMSAyMVoiIGZpbGw9IiNGRkZGRkYiLz4KPHBhdGggZD0iTTExIDExTDI2IDExTDI2IDE2TDExIDE2TDExIDExWiIgZmlsbD0iI0ZGRkZGRiIvPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJwYWludDBfbGluZWFyXzQ2XzEwOTkiIHgxPSIwIiB5MT0iMCIgeDI9IjQyIiB5Mj0iNDIiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agc3RvcC1jb2xvcj0iIzEwQjk4MSIvPgo8c3RvcCBvZmZzZXQ9IjAuNSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNFRjQ0NDQiLz4KPC9saW5lYXJHcmFkaWVudD4KPC9kZWZzPgo8L3N2Zz4K'">
+                    <div class="logo-text">Alpha<span>Signals</span></div>
+                </a>
+                <nav>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#methodology">Methodology</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                    </ul>
+                </nav>
+                <div class="mobile-menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>AI-Powered <span class="gradient-text">Trading Signals</span> That Actually Work</h1>
+                    <p>Join thousands of profitable traders using our proprietary AI system that analyzes 500+ market indicators to deliver high-probability trading signals with 89% accuracy.</p>
+                    <div class="hero-cta">
+                        <a href="#pricing" class="cta-button">
+                            <i class="fas fa-rocket"></i> Get Started Now
+                        </a>
+                        <a href="#features" class="cta-button secondary">
+                            <i class="fas fa-chart-line"></i> Learn More
+                        </a>
+                        <a href="https://t.me/AlphaAISignalsBot" target="_blank" class="cta-button telegram">
+                            <i class="fab fa-telegram"></i> Join Telegram Bot
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="ai-visualization">
+                        <div class="ai-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3 style="margin-bottom: 2rem; color: #111827;">AI Trading Intelligence</h3>
+                        <div class="ai-stats">
+                            <div class="ai-stat">
+                                <span class="stat-number">89.4%</span>
+                                <span class="stat-label">Signal Accuracy</span>
+                            </div>
+                            <div class="ai-stat">
+                                <span class="stat-number">500+</span>
+                                <span class="stat-label">Indicators Analyzed</span>
+                            </div>
+                            <div class="ai-stat">
+                                <span class="stat-number">24/7</span>
+                                <span class="stat-label">Market Monitoring</span>
+                            </div>
+                            <div class="ai-stat">
+                                <span class="stat-number">2.3%</span>
+                                <span class="stat-label">Avg Daily ROI</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Institutional-Grade Trading Tools</h2>
+                <p>Access the same technology used by hedge funds and professional traders</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>Advanced AI Analysis</h3>
+                    <p>Our proprietary machine learning algorithms analyze thousands of data points in real-time to identify high-probability trading opportunities.</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Real-time market scanning</li>
+                        <li><i class="fas fa-check"></i> Sentiment analysis integration</li>
+                        <li><i class="fas fa-check"></i> Pattern recognition technology</li>
+                        <li><i class="fas fa-check"></i> Risk assessment algorithms</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Instant Signal Delivery</h3>
+                    <p>Get lightning-fast alerts directly to your Telegram with complete entry, exit, and risk management instructions.</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Sub-100ms signal delivery</li>
+                        <li><i class="fas fa-check"></i> Multiple take-profit levels</li>
+                        <li><i class="fas fa-check"></i> Dynamic stop-loss adjustment</li>
+                        <li><i class="fas fa-check"></i> Position sizing recommendations</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-network"></i>
+                    </div>
+                    <h3>Multi-Market Coverage</h3>
+                    <p>Trade across Forex, Cryptocurrency, Stocks, and Indices with the same proven system.</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> 50+ Forex pairs</li>
+                        <li><i class="fas fa-check"></i> Top 50 cryptocurrencies</li>
+                        <li><i class="fas fa-check"></i> Major stock indices</li>
+                        <li><i class="fas fa-check"></i> Commodity markets</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Methodology Section -->
+    <section class="methodology" id="methodology">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Proven Methodology</h2>
+                <p>A systematic approach to profitable trading</p>
+            </div>
+            <div class="methodology-steps">
+                <div class="method-step">
+                    <div class="step-number">1</div>
+                    <h3>Market Analysis</h3>
+                    <p>Our AI scans 500+ technical indicators across multiple timeframes to identify high-probability setups with optimal risk-reward ratios.</p>
+                </div>
+                <div class="method-step">
+                    <div class="step-number">2</div>
+                    <h3>Signal Generation</h3>
+                    <p>Algorithms filter noise from the market and generate precise entry points with calculated stop-loss and take-profit levels.</p>
+                </div>
+                <div class="method-step">
+                    <div class="step-number">3</div>
+                    <h3>Risk Management</h3>
+                    <p>Every signal includes position sizing recommendations and dynamic stop-loss adjustments based on current market volatility.</p>
+                </div>
+                <div class="method-step">
+                    <div class="step-number">4</div>
+                    <h3>Performance Tracking</h3>
+                    <p>Continuous monitoring and optimization of our algorithms based on real-world trading results and market conditions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="section-title">
+                <h2>Simple, Transparent Pricing</h2>
+                <p>Choose the plan that fits your trading style</p>
+            </div>
+            <div class="pricing-subtitle">
+                All plans include access to our private Telegram channel with real-time signals and 24/7 support.
+            </div>
+            <div class="pricing-cards">
+                <!-- First Month Trial -->
+                <div class="pricing-card">
+                    <div class="plan-badge">TRIAL OFFER</div>
+                    <div class="plan-name">FIRST MONTH</div>
+                    <div class="plan-price">$18</div>
+                    <div class="plan-period">for your first month only</div>
+                    <div class="plan-savings">70% OFF Regular Price</div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check"></i> Full access to all signals</li>
+                        <li><i class="fas fa-check"></i> Forex & Crypto markets</li>
+                        <li><i class="fas fa-check"></i> 8-12 daily signals</li>
+                        <li><i class="fas fa-check"></i> Basic risk management</li>
+                        <li><i class="fas fa-check"></i> Email support</li>
+                        <li class="feature-disabled"><i class="fas fa-times"></i> Stock market signals</li>
+                        <li class="feature-disabled"><i class="fas fa-times"></i> Priority signal delivery</li>
+                    </ul>
+                    <a href="https://t.me/AlphaAISignalsBot" target="_blank" class="cta-button">Start Trial</a>
+                </div>
+
+                <!-- Monthly Plan -->
+                <div class="pricing-card featured">
+                    <div class="plan-badge">MOST POPULAR</div>
+                    <div class="plan-name">MONTHLY</div>
+                    <div class="plan-price">$49</div>
+                    <div class="plan-period">per month • cancel anytime</div>
+                    <div class="plan-savings">Best for Active Traders</div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check"></i> All Forex & Crypto signals</li>
+                        <li><i class="fas fa-check"></i> Stock market signals</li>
+                        <li><i class="fas fa-check"></i> 12-18 daily signals</li>
+                        <li><i class="fas fa-check"></i> Advanced risk management</li>
+                        <li><i class="fas fa-check"></i> Priority Telegram support</li>
+                        <li><i class="fas fa-check"></i> Market analysis reports</li>
+                        <li><i class="fas fa-check"></i> Weekly performance review</li>
+                    </ul>
+                    <a href="https://t.me/AlphaAISignalsBot" target="_blank" class="cta-button">Subscribe Now</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Minimal Footer -->
+    <footer class="minimal-footer">
+        <div class="container">
+            <div class="footer-logo">Alpha<span>Signals</span></div>
+            <div class="footer-tagline">AI-Powered Trading Signals for Consistent Market Performance</div>
+            <div class="footer-contact">
+                <i class="fab fa-telegram"></i> @AlphaAISignalsBot • support@alphasignals.com
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 AlphaSignals. All rights reserved. Trading involves substantial risk of loss and is not suitable for every investor. Past performance is not indicative of future results.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Create background trading elements
+        document.addEventListener('DOMContentLoaded', function() {
+            const bgElements = document.getElementById('bgElements');
+            
+            // Add trading lines
+            for (let i = 0; i < 20; i++) {
+                const line = document.createElement('div');
+                line.className = 'trading-line';
+                line.style.left = `${Math.random() * 100}%`;
+                line.style.top = `${Math.random() * 100}%`;
+                line.style.width = `${50 + Math.random() * 200}px`;
+                line.style.transform = `rotate(${Math.random() * 360}deg)`;
+                line.style.opacity = `${0.1 + Math.random() * 0.2}`;
+                bgElements.appendChild(line);
+            }
+            
+            // Add trading dots
+            for (let i = 0; i < 60; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'trading-dot';
+                dot.style.left = `${Math.random() * 100}%`;
+                dot.style.top = `${Math.random() * 100}%`;
+                dot.style.opacity = `${0.1 + Math.random() * 0.2}`;
+                bgElements.appendChild(dot);
+            }
+            
+            // Mobile menu toggle
+            const mobileMenu = document.querySelector('.mobile-menu');
+            const nav = document.querySelector('nav ul');
+            
+            mobileMenu.addEventListener('click', function() {
+                nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+                if (nav.style.display === 'flex') {
+                    nav.style.flexDirection = 'column';
+                    nav.style.position = 'absolute';
+                    nav.style.top = '100%';
+                    nav.style.left = '0';
+                    nav.style.right = '0';
+                    nav.style.backgroundColor = '#000000';
+                    nav.style.padding = '2rem';
+                    nav.style.gap = '1.5rem';
+                    nav.style.zIndex = '1000';
+                }
+            });
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Close mobile menu if open
+                        if (window.innerWidth <= 768 && nav.style.display === 'flex') {
+                            nav.style.display = 'none';
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
