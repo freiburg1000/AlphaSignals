@@ -10,7 +10,7 @@ Professional AI-powered trading signals for Crypto, Forex, and Commodities.
 - Multiple subscription plans
 
 ## Live Demo
-[Visit Live Website](https://your-website-link-here.com)
+*Website coming soon!*
 
 ## Project Files
 - `index.html` - Main website page
