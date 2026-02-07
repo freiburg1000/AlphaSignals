@@ -3,1001 +3,1021 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AlphaSignals - AI-Powered Trading Signals</title>
+    <title>Powered by AI | AI Trading Signals Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
+        
         body {
-            background-color: #ffffff;
-            color: #111827;
-            line-height: 1.6;
-            overflow-x: hidden;
+            background: #ffffff;
+            color: #1a1a1a;
+            min-height: 100vh;
+            padding: 20px;
             position: relative;
+            overflow-x: hidden;
         }
-
-        /* Background Trading Elements */
-        .bg-trading-elements {
+        
+        /* Background Charts - More visible */
+        .background-charts {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: -1;
-            opacity: 0.02;
+            opacity: 0.15;
             pointer-events: none;
             overflow: hidden;
         }
-
-        .trading-line {
+        
+        /* Realistic candlestick chart */
+        .candlestick-chart {
             position: absolute;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            padding: 15px;
+        }
+        
+        .candlestick {
+            position: absolute;
+            width: 8px;
+            border-radius: 2px;
+            transition: all 2s ease;
+        }
+        
+        .candlestick.green {
+            background: linear-gradient(to bottom, #10b981, #059669);
+            border: 1px solid #10b981;
+        }
+        
+        .candlestick.red {
+            background: linear-gradient(to bottom, #ef4444, #dc2626);
+            border: 1px solid #ef4444;
+        }
+        
+        .chart-grid {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            grid-template-rows: repeat(10, 1fr);
+        }
+        
+        .grid-line {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.03);
+        }
+        
+        .grid-line.horizontal {
+            width: 100%;
             height: 1px;
-            background: linear-gradient(90deg, transparent, #000000, transparent);
-            transform-origin: left;
         }
-
-        .trading-dot {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background-color: #000000;
-            border-radius: 50%;
+        
+        .grid-line.vertical {
+            width: 1px;
+            height: 100%;
         }
-
-        /* Header & Navigation */
-        header {
-            background-color: #000000;
-            color: #ffffff;
-            padding: 1.2rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        
+        /* Chart animations */
+        @keyframes floatChart1 {
+            0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
+            25% { transform: translateY(-20px) translateX(10px) rotate(1deg); }
+            50% { transform: translateY(10px) translateX(-15px) rotate(-1deg); }
+            75% { transform: translateY(-10px) translateX(5px) rotate(0.5deg); }
         }
-
+        
+        @keyframes floatChart2 {
+            0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
+            25% { transform: translateY(15px) translateX(-10px) rotate(-1deg); }
+            50% { transform: translateY(-15px) translateX(5px) rotate(1deg); }
+            75% { transform: translateY(10px) translateX(-5px) rotate(-0.5deg); }
+        }
+        
+        @keyframes floatChart3 {
+            0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
+            25% { transform: translateY(-10px) translateX(15px) rotate(0.5deg); }
+            50% { transform: translateY(20px) translateX(-5px) rotate(-0.5deg); }
+            75% { transform: translateY(-5px) translateX(10px) rotate(1deg); }
+        }
+        
+        /* Chart positions */
+        .candlestick-chart:nth-child(1) {
+            width: 300px;
+            height: 180px;
+            top: 10%;
+            left: 5%;
+            animation: floatChart1 25s ease-in-out infinite;
+            z-index: 1;
+        }
+        
+        .candlestick-chart:nth-child(2) {
+            width: 250px;
+            height: 150px;
+            top: 20%;
+            right: 8%;
+            animation: floatChart2 30s ease-in-out infinite;
+            z-index: 1;
+        }
+        
+        .candlestick-chart:nth-child(3) {
+            width: 280px;
+            height: 160px;
+            bottom: 20%;
+            left: 10%;
+            animation: floatChart3 28s ease-in-out infinite;
+            z-index: 1;
+        }
+        
+        .candlestick-chart:nth-child(4) {
+            width: 220px;
+            height: 140px;
+            bottom: 15%;
+            right: 5%;
+            animation: floatChart1 32s ease-in-out infinite;
+            z-index: 1;
+        }
+        
+        /* Main content */
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 2rem;
+            position: relative;
+            z-index: 10;
         }
-
-        .header-content {
+        
+        /* Header */
+        header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 30px 0;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 20px;
+            padding: 25px 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(10px);
         }
-
+        
         .logo {
             display: flex;
             align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            text-decoration: none;
+            gap: 15px;
         }
-
-        .logo-image {
-            width: 42px;
-            height: 42px;
-            border-radius: 8px;
-            object-fit: cover;
-            border: 2px solid #10b981;
-        }
-
-        .logo-text {
-            font-size: 28px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            color: white;
-        }
-
-        .logo-text span {
-            color: #10b981;
-            background: linear-gradient(135deg, #10b981, #3b82f6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        nav ul {
+        
+        .logo-icon {
+            background: #000000;
+            width: 65px;
+            height: 65px;
+            border-radius: 14px;
             display: flex;
-            list-style: none;
-            gap: 2.5rem;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 800;
+            color: white;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            line-height: 1;
+            padding: 8px;
+            text-align: center;
         }
-
-        nav a {
-            color: #ffffff;
-            text-decoration: none;
-            font-weight: 600;
+        
+        .logo-icon .line {
+            display: block;
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            line-height: 1.1;
+        }
+        
+        .logo-text h1 {
+            font-size: 32px;
+            font-weight: 800;
+            color: #000000;
+        }
+        
+        .logo-text p {
+            color: #4b5563;
             font-size: 15px;
-            transition: all 0.3s;
-            padding: 8px 0;
-            position: relative;
+            letter-spacing: 0.5px;
         }
-
-        nav a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #10b981, #3b82f6);
-            transition: width 0.3s;
+        
+        .header-buttons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
         }
-
-        nav a:hover::after {
-            width: 100%;
-        }
-
-        nav a:hover {
-            color: #10b981;
-        }
-
-        .mobile-menu {
-            display: none;
-            font-size: 24px;
+        
+        .telegram-button {
+            background: #000000;
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
             cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
-        /* Hero Section - Enhanced */
+        
+        .telegram-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.35);
+            background: #222222;
+        }
+        
+        /* Hero Section */
         .hero {
-            padding: 6rem 0 5rem;
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            text-align: center;
+            padding: 70px 40px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 24px;
+            margin-bottom: 60px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
             position: relative;
             overflow: hidden;
         }
-
+        
         .hero::before {
             content: '';
             position: absolute;
-            top: -50%;
-            right: -10%;
-            width: 60%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(16, 185, 129, 0.05) 0%, transparent 70%);
-            z-index: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #c0c0c0;
         }
-
-        .hero-content {
-            display: grid;
-            grid-template-columns: 1.2fr 0.8fr;
-            gap: 5rem;
-            align-items: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero-text h1 {
-            font-size: 56px;
-            margin-bottom: 1.5rem;
-            line-height: 1.1;
+        
+        .hero h2 {
+            font-size: 52px;
+            margin-bottom: 25px;
             font-weight: 800;
-            letter-spacing: -1px;
+            color: #000000;
+            line-height: 1.2;
         }
-
-        .hero-text h1 .gradient-text {
-            background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-text p {
+        
+        .hero p {
             font-size: 20px;
-            margin-bottom: 2.5rem;
             color: #4b5563;
-            max-width: 600px;
+            max-width: 800px;
+            margin: 0 auto 40px;
             line-height: 1.7;
         }
-
-        .hero-cta {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .cta-button {
+        
+        .accuracy-badge {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            background: linear-gradient(135deg, #000000 0%, #111827 100%);
-            color: #ffffff;
-            padding: 16px 36px;
-            border-radius: 10px;
-            font-weight: 700;
-            text-decoration: none;
-            transition: all 0.3s;
-            border: none;
-            font-size: 16px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .cta-button.telegram {
-            background: linear-gradient(135deg, #0088cc 0%, #006699 100%);
-        }
-
-        .cta-button.telegram:hover {
-            background: linear-gradient(135deg, #0099e6 0%, #0088cc 100%);
-        }
-
-        .cta-button.secondary {
-            background: transparent;
+            background: rgba(0, 0, 0, 0.1);
+            padding: 14px 28px;
+            border-radius: 50px;
+            border: 1px solid rgba(192, 192, 192, 0.2);
             color: #000000;
-            border: 2px solid #000000;
-        }
-
-        .cta-button.secondary:hover {
-            background: #000000;
-            color: #ffffff;
-        }
-
-        .hero-visual {
-            position: relative;
-            background: linear-gradient(145deg, #ffffff, #f8fafc);
-            border-radius: 20px;
-            padding: 3rem;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-            border: 1px solid #e5e7eb;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 300px;
-        }
-
-        .ai-visualization {
-            text-align: center;
-            width: 100%;
-        }
-
-        .ai-icon {
-            font-size: 64px;
-            margin-bottom: 1.5rem;
-            color: #10b981;
-            animation: pulse 2s infinite;
-        }
-
-        .ai-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-            width: 100%;
-        }
-
-        .ai-stat {
-            text-align: center;
-            padding: 1.5rem;
-            background: #f9fafb;
-            border-radius: 12px;
-            border: 1px solid #e5e7eb;
-            transition: all 0.3s;
-        }
-
-        .ai-stat:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-            border-color: #10b981;
-        }
-
-        .stat-number {
-            font-size: 32px;
-            font-weight: 800;
-            color: #111827;
-            margin-bottom: 0.5rem;
-            display: block;
-        }
-
-        .stat-label {
-            font-size: 14px;
-            color: #6b7280;
-            text-transform: uppercase;
-            letter-spacing: 1px;
             font-weight: 600;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        /* Features Section */
-        .features {
-            padding: 5rem 0;
-            background-color: #ffffff;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        .section-title h2 {
-            font-size: 42px;
-            margin-bottom: 1rem;
-            font-weight: 800;
-            letter-spacing: -1px;
-        }
-
-        .section-title p {
-            color: #6b7280;
-            max-width: 700px;
-            margin: 0 auto;
             font-size: 18px;
         }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2.5rem;
-            margin-top: 3rem;
+        
+        .accuracy-badge i {
+            color: #000000;
+            margin-right: 12px;
+            font-size: 22px;
         }
-
-        .feature-card {
-            background-color: #ffffff;
-            border: 1px solid #e5e7eb;
-            border-radius: 16px;
-            padding: 2.5rem;
-            transition: all 0.4s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
+        
+        /* Telegram Section */
+        .telegram-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            padding: 60px 40px;
+            margin-bottom: 60px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            text-align: center;
             position: relative;
             overflow: hidden;
         }
-
-        .feature-card::before {
+        
+        .telegram-section::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 4px;
-            background: linear-gradient(90deg, #10b981, #3b82f6);
-            transform: scaleX(0);
-            transition: transform 0.4s;
-            transform-origin: left;
+            background: #c0c0c0;
         }
-
-        .feature-card:hover::before {
-            transform: scaleX(1);
+        
+        .telegram-icon {
+            font-size: 64px;
+            color: #000000;
+            margin-bottom: 25px;
         }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        
+        .telegram-section h2 {
+            font-size: 42px;
+            margin-bottom: 20px;
+            font-weight: 800;
+            color: #000000;
         }
-
-        .feature-icon {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, #10b981, #3b82f6);
+        
+        .telegram-section p {
+            font-size: 20px;
+            color: #4b5563;
+            max-width: 800px;
+            margin: 0 auto 40px;
+            line-height: 1.7;
+        }
+        
+        .telegram-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+        
+        .telegram-feature {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 25px;
             border-radius: 16px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+        
+        .telegram-feature:hover {
+            transform: translateY(-5px);
+            border-color: rgba(192, 192, 192, 0.3);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .telegram-feature i {
+            font-size: 32px;
+            color: #000000;
+            margin-bottom: 15px;
+        }
+        
+        .telegram-feature h3 {
+            font-size: 22px;
+            margin-bottom: 10px;
+            color: #000000;
+        }
+        
+        .telegram-feature p {
+            font-size: 16px;
+            color: #4b5563;
+            margin: 0;
+        }
+        
+        .telegram-cta-button {
+            background: #000000;
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 40px;
+            text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .telegram-cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            background: #222222;
+        }
+        
+        /* Features Grid */
+        .section-title {
+            font-size: 36px;
+            text-align: center;
+            margin-bottom: 50px;
+            font-weight: 800;
+            color: #000000;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 35px 30px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.4s;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-color: rgba(192, 192, 192, 0.3);
+        }
+        
+        .feature-icon {
+            width: 75px;
+            height: 75px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 1.5rem;
-            color: white;
-            font-size: 28px;
+            margin-bottom: 25px;
+            font-size: 32px;
+            color: #000000;
         }
-
+        
         .feature-card h3 {
             font-size: 24px;
-            margin-bottom: 1rem;
-            color: #111827;
+            margin-bottom: 15px;
+            color: #000000;
+            font-weight: 700;
         }
-
+        
         .feature-card p {
-            color: #6b7280;
-            margin-bottom: 1.5rem;
-            line-height: 1.7;
-        }
-
-        .feature-list {
-            list-style: none;
-        }
-
-        .feature-list li {
-            padding: 8px 0;
             color: #4b5563;
+            line-height: 1.7;
+            font-size: 16px;
+        }
+        
+        /* Stats */
+        .stats {
             display: flex;
-            align-items: center;
-            gap: 10px;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            padding: 50px 40px;
+            margin-bottom: 60px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
         }
-
-        .feature-list li i {
-            color: #10b981;
-            font-size: 14px;
+        
+        .stats::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: #c0c0c0;
         }
-
-        /* Trading Methodology */
-        .methodology {
-            padding: 5rem 0;
-            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+        
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            z-index: 1;
         }
-
-        .methodology-steps {
+        
+        .stat-number {
+            font-size: 52px;
+            font-weight: 800;
+            color: #000000;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: #4b5563;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        /* Trading Rules/FAQ Section */
+        .trading-rules {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            padding: 70px 40px;
+            margin-bottom: 60px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .trading-rules::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: #c0c0c0;
+        }
+        
+        .trading-rules h2 {
+            font-size: 42px;
+            margin-bottom: 50px;
+            font-weight: 800;
+            color: #000000;
+            text-align: center;
+        }
+        
+        .rules-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 3rem;
-            margin-top: 3rem;
+            gap: 35px;
+            margin-top: 30px;
         }
-
-        .method-step {
+        
+        .rule-card {
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 20px;
+            padding: 35px 30px;
+            border: 1px solid rgba(192, 192, 192, 0.2);
+            transition: all 0.4s;
             text-align: center;
-            padding: 2.5rem;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            border: 1px solid #e5e7eb;
-            transition: transform 0.3s;
+            position: relative;
         }
-
-        .method-step:hover {
-            transform: translateY(-5px);
+        
+        .rule-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #c0c0c0, #a0a0a0, #c0c0c0);
+            border-radius: 20px 20px 0 0;
         }
-
-        .step-number {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #000000, #111827);
-            color: white;
+        
+        .rule-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(192, 192, 192, 0.15);
+        }
+        
+        .rule-icon {
+            width: 70px;
+            height: 70px;
+            background: rgba(192, 192, 192, 0.1);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            margin: 0 auto 25px;
+            font-size: 28px;
+            color: #000000;
+            border: 2px solid rgba(192, 192, 192, 0.3);
+        }
+        
+        .rule-card h3 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #000000;
             font-weight: 800;
-            margin: 0 auto 1.5rem;
+            line-height: 1.3;
         }
-
-        .method-step h3 {
-            font-size: 22px;
-            margin-bottom: 1rem;
-            color: #111827;
-        }
-
-        .method-step p {
-            color: #6b7280;
-            line-height: 1.6;
-        }
-
-        /* Pricing Section */
-        .pricing {
-            padding: 5rem 0;
-            background-color: #ffffff;
-        }
-
-        .pricing-header {
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-
-        .pricing-subtitle {
-            color: #6b7280;
+        
+        .rule-card p {
+            color: #4b5563;
+            line-height: 1.8;
             font-size: 18px;
-            max-width: 700px;
-            margin: 0 auto 3rem;
+            font-weight: 500;
+        }
+        
+        .warning-note {
+            background: rgba(255, 244, 229, 0.9);
+            border-radius: 16px;
+            padding: 30px;
+            margin-top: 50px;
+            border: 2px solid rgba(245, 158, 11, 0.3);
             text-align: center;
         }
-
-        .pricing-cards {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .pricing-card {
-            background-color: #ffffff;
-            border: 2px solid #e5e7eb;
-            border-radius: 20px;
-            padding: 3rem;
-            width: 380px;
-            text-align: center;
-            transition: all 0.4s;
-            position: relative;
-        }
-
-        .pricing-card.featured {
-            border-color: #000000;
-            transform: translateY(-10px);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
-        }
-
-        .plan-badge {
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #10b981, #3b82f6);
-            color: white;
-            padding: 6px 20px;
-            border-radius: 20px;
-            font-size: 14px;
+        
+        .warning-note h4 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #92400e;
             font-weight: 700;
         }
-
-        .plan-name {
-            font-weight: 800;
-            font-size: 24px;
-            margin-bottom: 1rem;
-            color: #111827;
+        
+        .warning-note p {
+            font-size: 18px;
+            color: #78350f;
+            line-height: 1.7;
+            font-weight: 500;
         }
-
-        .plan-price {
-            font-size: 56px;
-            font-weight: 800;
-            margin-bottom: 0.5rem;
-            color: #111827;
-        }
-
-        .plan-period {
-            color: #6b7280;
-            font-size: 16px;
-            margin-bottom: 2rem;
-        }
-
-        .plan-savings {
-            background-color: #10b98110;
-            color: #10b981;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            display: inline-block;
-            margin-bottom: 2rem;
-            border: 1px solid #10b98130;
-        }
-
-        .plan-features {
-            list-style: none;
-            margin: 2rem 0;
-            text-align: left;
-        }
-
-        .plan-features li {
-            padding: 12px 0;
-            border-bottom: 1px solid #f3f4f6;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .plan-features li:last-child {
-            border-bottom: none;
-        }
-
-        .plan-features i {
-            color: #10b981;
-            font-size: 16px;
-        }
-
-        .feature-disabled {
-            opacity: 0.5;
-        }
-
-        .feature-disabled i {
-            color: #9ca3af;
-        }
-
-        /* Minimal Footer */
-        .minimal-footer {
-            background-color: #000000;
-            color: #ffffff;
-            padding: 2rem 0;
-            text-align: center;
-        }
-
-        .minimal-footer .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .footer-logo {
-            font-size: 28px;
-            font-weight: 800;
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-logo span {
-            color: #10b981;
-        }
-
-        .footer-tagline {
-            color: #d1d5db;
-            font-size: 16px;
-            max-width: 600px;
-            margin: 0 auto 1.5rem;
-        }
-
-        .footer-contact {
-            color: #9ca3af;
-            font-size: 14px;
-            margin-bottom: 1.5rem;
-        }
-
-        .copyright {
-            color: #6b7280;
-            font-size: 13px;
-            border-top: 1px solid #374151;
-            padding-top: 1.5rem;
-            width: 100%;
-        }
-
+        
         /* Responsive */
-        @media (max-width: 1024px) {
-            .hero-content {
-                grid-template-columns: 1fr;
-                text-align: center;
-                gap: 3rem;
-            }
-
-            .hero-visual {
-                max-width: 600px;
-                margin: 0 auto;
-            }
-
-            .hero-text h1 {
-                font-size: 42px;
-            }
-
-            .ai-stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
         @media (max-width: 768px) {
-            nav ul {
-                display: none;
-            }
-
-            .mobile-menu {
-                display: block;
-            }
-
-            .hero-text h1 {
-                font-size: 36px;
-            }
-
-            .features-grid, .methodology-steps {
-                grid-template-columns: 1fr;
-            }
-
-            .pricing-cards {
+            header {
                 flex-direction: column;
-                align-items: center;
+                gap: 20px;
+                text-align: center;
             }
-
-            .pricing-card {
+            
+            .header-buttons {
                 width: 100%;
-                max-width: 400px;
             }
-
-            .pricing-card.featured {
-                transform: none;
-            }
-
-            .hero-cta {
-                flex-direction: column;
-            }
-
-            .cta-button {
+            
+            .telegram-button {
                 width: 100%;
                 justify-content: center;
             }
-
-            .ai-stats {
+            
+            .hero h2 {
+                font-size: 38px;
+            }
+            
+            .telegram-section h2 {
+                font-size: 32px;
+            }
+            
+            .trading-rules h2 {
+                font-size: 36px;
+            }
+            
+            .rule-card h3 {
+                font-size: 24px;
+            }
+            
+            .stats {
+                flex-direction: column;
+            }
+            
+            .candlestick-chart {
+                opacity: 0.08;
+            }
+            
+            .telegram-features, .rules-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .logo-icon {
+                width: 70px;
+                height: 70px;
+                font-size: 16px;
+            }
+            
+            .logo-icon .line {
+                font-size: 16px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Background Trading Elements -->
-    <div class="bg-trading-elements" id="bgElements"></div>
-
-    <!-- Header -->
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <a href="#home" class="logo">
-                    <img src="https://chatgpt.com/backend-api/estuary/content?id=file_00000000e71c71f4b381ff2513383ce1&ts=491795&p=fs&cid=1&sig=4cb616d258195901dfa7d2fdbdc8c3ca63ac93505149b4501ebaa49db4b55a5c&v=0" 
-                         alt="AlphaSignals Logo" 
-                         class="logo-image"
-                         onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDIiIGhlaWdodD0iNDIiIHZpZXdCb3g9IjAgMCA0MiA0MiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQyIiBoZWlnaHQ9IjQyIiByeD0iOCIgZmlsbD0idXJsKCNwYWludDBfbGluZWFyXzQ2XzEwOTkpIi8+CjxwYXRoIGQ9Ik0xMSAyMUwzMSAyMUwzMSAzMUwxMSAzMUwxMSAyMVoiIGZpbGw9IiNGRkZGRkYiLz4KPHBhdGggZD0iTTExIDExTDI2IDExTDI2IDE2TDExIDE2TDExIDExWiIgZmlsbD0iI0ZGRkZGRiIvPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJwYWludDBfbGluZWFyXzQ2XzEwOTkiIHgxPSIwIiB5MT0iMCIgeDI9IjQyIiB5Mj0iNDIiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agc3RvcC1jb2xvcj0iIzEwQjk4MSIvPgo8c3RvcCBvZmZzZXQ9IjAuNSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNFRjQ0NDQiLz4KPC9saW5lYXJHcmFkaWVudD4KPC9kZWZzPgo8L3N2Zz4K'">
-                    <div class="logo-text">Alpha<span>Signals</span></div>
+    <!-- Background Charts with Candlesticks -->
+    <div class="background-charts">
+        <div class="candlestick-chart">
+            <div class="chart-grid"></div>
+            <!-- Candlesticks will be added by JavaScript -->
+        </div>
+        <div class="candlestick-chart">
+            <div class="chart-grid"></div>
+        </div>
+        <div class="candlestick-chart">
+            <div class="chart-grid"></div>
+        </div>
+        <div class="candlestick-chart">
+            <div class="chart-grid"></div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <div class="logo-icon">
+                    <span class="line">Quan</span>
+                    <span class="line">tita</span>
+                    <span class="line">tive</span>
+                </div>
+                <div class="logo-text">
+                    <h1>Powered by AI</h1>
+                    <p>Algo Trading</p>
+                </div>
+            </div>
+            <div class="header-buttons">
+                <a href="https://t.me/AlphaAISignalsBot" target="_blank" class="telegram-button">
+                    <i class="fab fa-telegram"></i> Join Telegram
                 </a>
-                <nav>
-                    <ul>
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#features">Features</a></li>
-                        <li><a href="#methodology">Methodology</a></li>
-                        <li><a href="#pricing">Pricing</a></li>
-                    </ul>
-                </nav>
-                <div class="mobile-menu">
-                    <i class="fas fa-bars"></i>
-                </div>
             </div>
-        </div>
-    </header>
-
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="container">
-            <div class="hero-content">
-                <div class="hero-text">
-                    <h1>AI-Powered <span class="gradient-text">Trading Signals</span> That Actually Work</h1>
-                    <p>Join thousands of profitable traders using our proprietary AI system that analyzes 500+ market indicators to deliver high-probability trading signals with 89% accuracy.</p>
-                    <div class="hero-cta">
-                        <a href="#pricing" class="cta-button">
-                            <i class="fas fa-rocket"></i> Get Started Now
-                        </a>
-                        <a href="#features" class="cta-button secondary">
-                            <i class="fas fa-chart-line"></i> Learn More
-                        </a>
-                        <a href="https://t.me/AlphaAISignalsBot" target="_blank" class="cta-button telegram">
-                            <i class="fab fa-telegram"></i> Join Telegram Bot
-                        </a>
-                    </div>
-                </div>
-                <div class="hero-visual">
-                    <div class="ai-visualization">
-                        <div class="ai-icon">
-                            <i class="fas fa-brain"></i>
-                        </div>
-                        <h3 style="margin-bottom: 2rem; color: #111827;">AI Trading Intelligence</h3>
-                        <div class="ai-stats">
-                            <div class="ai-stat">
-                                <span class="stat-number">89.4%</span>
-                                <span class="stat-label">Signal Accuracy</span>
-                            </div>
-                            <div class="ai-stat">
-                                <span class="stat-number">500+</span>
-                                <span class="stat-label">Indicators Analyzed</span>
-                            </div>
-                            <div class="ai-stat">
-                                <span class="stat-number">24/7</span>
-                                <span class="stat-label">Market Monitoring</span>
-                            </div>
-                            <div class="ai-stat">
-                                <span class="stat-number">2.3%</span>
-                                <span class="stat-label">Avg Daily ROI</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        </header>
+        
+        <!-- Hero Section -->
+        <section class="hero">
+            <h2>Quantitative Trading<br>Powered by AI</h2>
+            <p>Advanced artificial intelligence analyzing 500+ market indicators to deliver high-accuracy trading signals for Crypto, Forex, and Commodities.</p>
+            <div class="accuracy-badge">
+                <i class="fas fa-chart-line"></i>
+                <span>89.4% Signal Accuracy Rate</span>
             </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="features" id="features">
-        <div class="container">
-            <div class="section-title">
-                <h2>Institutional-Grade Trading Tools</h2>
-                <p>Access the same technology used by hedge funds and professional traders</p>
+        </section>
+        
+        <!-- Telegram Section -->
+        <section class="telegram-section">
+            <div class="telegram-icon">
+                <i class="fab fa-telegram"></i>
             </div>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-robot"></i>
-                    </div>
-                    <h3>Advanced AI Analysis</h3>
-                    <p>Our proprietary machine learning algorithms analyze thousands of data points in real-time to identify high-probability trading opportunities.</p>
-                    <ul class="feature-list">
-                        <li><i class="fas fa-check"></i> Real-time market scanning</li>
-                        <li><i class="fas fa-check"></i> Sentiment analysis integration</li>
-                        <li><i class="fas fa-check"></i> Pattern recognition technology</li>
-                        <li><i class="fas fa-check"></i> Risk assessment algorithms</li>
-                    </ul>
+            <h2>Join Our Telegram Bot</h2>
+            <p>Get real-time trading signals, market analysis, and community insights directly in your Telegram. Join thousands of traders who trust Powered by AI for their trading decisions.</p>
+            
+            <div class="telegram-features">
+                <div class="telegram-feature">
+                    <i class="fas fa-bolt"></i>
+                    <h3>Instant Signals</h3>
+                    <p>Receive trading signals the moment they're generated by our AI</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-bolt"></i>
-                    </div>
-                    <h3>Instant Signal Delivery</h3>
-                    <p>Get lightning-fast alerts directly to your Telegram with complete entry, exit, and risk management instructions.</p>
-                    <ul class="feature-list">
-                        <li><i class="fas fa-check"></i> Sub-100ms signal delivery</li>
-                        <li><i class="fas fa-check"></i> Multiple take-profit levels</li>
-                        <li><i class="fas fa-check"></i> Dynamic stop-loss adjustment</li>
-                        <li><i class="fas fa-check"></i> Position sizing recommendations</li>
-                    </ul>
+                <div class="telegram-feature">
+                    <i class="fas fa-comments"></i>
+                    <h3>Live Community</h3>
+                    <p>Discuss strategies with other traders in real-time</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-chart-network"></i>
-                    </div>
-                    <h3>Multi-Market Coverage</h3>
-                    <p>Trade across Forex, Cryptocurrency, Stocks, and Indices with the same proven system.</p>
-                    <ul class="feature-list">
-                        <li><i class="fas fa-check"></i> 50+ Forex pairs</li>
-                        <li><i class="fas fa-check"></i> Top 50 cryptocurrencies</li>
-                        <li><i class="fas fa-check"></i> Major stock indices</li>
-                        <li><i class="fas fa-check"></i> Commodity markets</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Methodology Section -->
-    <section class="methodology" id="methodology">
-        <div class="container">
-            <div class="section-title">
-                <h2>Our Proven Methodology</h2>
-                <p>A systematic approach to profitable trading</p>
-            </div>
-            <div class="methodology-steps">
-                <div class="method-step">
-                    <div class="step-number">1</div>
+                <div class="telegram-feature">
+                    <i class="fas fa-chart-bar"></i>
                     <h3>Market Analysis</h3>
-                    <p>Our AI scans 500+ technical indicators across multiple timeframes to identify high-probability setups with optimal risk-reward ratios.</p>
+                    <p>Get daily market insights and technical analysis</p>
                 </div>
-                <div class="method-step">
-                    <div class="step-number">2</div>
-                    <h3>Signal Generation</h3>
-                    <p>Algorithms filter noise from the market and generate precise entry points with calculated stop-loss and take-profit levels.</p>
+                <div class="telegram-feature">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h3>Mobile First</h3>
+                    <p>Access signals anywhere, anytime via Telegram mobile app</p>
                 </div>
-                <div class="method-step">
-                    <div class="step-number">3</div>
-                    <h3>Risk Management</h3>
-                    <p>Every signal includes position sizing recommendations and dynamic stop-loss adjustments based on current market volatility.</p>
+            </div>
+            
+            <a href="https://t.me/AlphaAISignalsBot" target="_blank" class="telegram-cta-button">
+                <i class="fab fa-telegram"></i> Join Telegram Bot Now
+            </a>
+            
+        </section>
+        
+        <!-- Features -->
+        <h2 class="section-title">Why Choose Powered by AI</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-brain"></i>
                 </div>
-                <div class="method-step">
-                    <div class="step-number">4</div>
-                    <h3>Performance Tracking</h3>
-                    <p>Continuous monitoring and optimization of our algorithms based on real-world trading results and market conditions.</p>
+                <h3>AI-Powered Analysis</h3>
+                <p>Our neural networks process thousands of data points in real-time to identify profitable trading opportunities.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-clock"></i>
                 </div>
+                <h3>24/7 Monitoring</h3>
+                <p>Never miss a trading opportunity. Our systems monitor global markets around the clock.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Risk Management</h3>
+                <p>Built-in risk assessment and stop-loss recommendations to protect your capital.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3>Multi-Platform</h3>
+                <p>Access signals via web, mobile app, or API integration with your trading platform.</p>
             </div>
         </div>
-    </section>
-
-    <!-- Pricing Section -->
-    <section class="pricing" id="pricing">
-        <div class="container">
-            <div class="section-title">
-                <h2>Simple, Transparent Pricing</h2>
-                <p>Choose the plan that fits your trading style</p>
+        
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number">500+</div>
+                <div class="stat-label">Market Indicators</div>
             </div>
-            <div class="pricing-subtitle">
-                All plans include access to our private Telegram channel with real-time signals and 24/7 support.
+            <div class="stat-item">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Market Monitoring</div>
             </div>
-            <div class="pricing-cards">
-                <!-- First Month Trial -->
-                <div class="pricing-card">
-                    <div class="plan-badge">TRIAL OFFER</div>
-                    <div class="plan-name">FIRST MONTH</div>
-                    <div class="plan-price">$18</div>
-                    <div class="plan-period">for your first month only</div>
-                    <div class="plan-savings">70% OFF Regular Price</div>
-                    <ul class="plan-features">
-                        <li><i class="fas fa-check"></i> Full access to all signals</li>
-                        <li><i class="fas fa-check"></i> Forex & Crypto markets</li>
-                        <li><i class="fas fa-check"></i> 8-12 daily signals</li>
-                        <li><i class="fas fa-check"></i> Basic risk management</li>
-                        <li><i class="fas fa-check"></i> Email support</li>
-                        <li class="feature-disabled"><i class="fas fa-times"></i> Stock market signals</li>
-                        <li class="feature-disabled"><i class="fas fa-times"></i> Priority signal delivery</li>
-                    </ul>
-                    <a href="https://t.me/AlphaAISignalsBot" target="_blank" class="cta-button">Start Trial</a>
-                </div>
-
-                <!-- Monthly Plan -->
-                <div class="pricing-card featured">
-                    <div class="plan-badge">MOST POPULAR</div>
-                    <div class="plan-name">MONTHLY</div>
-                    <div class="plan-price">$49</div>
-                    <div class="plan-period">per month • cancel anytime</div>
-                    <div class="plan-savings">Best for Active Traders</div>
-                    <ul class="plan-features">
-                        <li><i class="fas fa-check"></i> All Forex & Crypto signals</li>
-                        <li><i class="fas fa-check"></i> Stock market signals</li>
-                        <li><i class="fas fa-check"></i> 12-18 daily signals</li>
-                        <li><i class="fas fa-check"></i> Advanced risk management</li>
-                        <li><i class="fas fa-check"></i> Priority Telegram support</li>
-                        <li><i class="fas fa-check"></i> Market analysis reports</li>
-                        <li><i class="fas fa-check"></i> Weekly performance review</li>
-                    </ul>
-                    <a href="https://t.me/AlphaAISignalsBot" target="_blank" class="cta-button">Subscribe Now</a>
-                </div>
+            <div class="stat-item">
+                <div class="stat-number">89.4%</div>
+                <div class="stat-label">Accuracy Rate</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">1.2s</div>
+                <div class="stat-label">Signal Latency</div>
             </div>
         </div>
-    </section>
-
-    <!-- Minimal Footer -->
-    <footer class="minimal-footer">
-        <div class="container">
-            <div class="footer-logo">Alpha<span>Signals</span></div>
-            <div class="footer-tagline">AI-Powered Trading Signals for Consistent Market Performance</div>
-            <div class="footer-contact">
-                <i class="fab fa-telegram"></i> @AlphaAISignalsBot • support@alphasignals.com
+        
+        <!-- Trading Rules/FAQ Section -->
+        <section class="trading-rules">
+            <h2>Master Trading Rules</h2>
+            <p style="text-align: center; font-size: 20px; color: #4b5563; margin-bottom: 50px; max-width: 800px; margin-left: auto; margin-right: auto;">
+                Follow these essential rules to become a successful trader. Discipline is more important than strategy.
+            </p>
+            
+            <div class="rules-grid">
+                <div class="rule-card">
+                    <div class="rule-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Never Risk More Than 0.3-0.5% On A Trade</h3>
+                    <p>Protect your capital by limiting risk exposure. Never gamble more than you can afford to lose on any single position.</p>
+                </div>
+                
+                <div class="rule-card">
+                    <div class="rule-icon">
+                        <i class="fas fa-ban"></i>
+                    </div>
+                    <h3>Never Ever Add To A Losing Position</h3>
+                    <p>Averaging down is the fastest way to blow up your account. Cut losses quickly and never throw good money after bad.</p>
+                </div>
+                
+                <div class="rule-card">
+                    <div class="rule-icon">
+                        <i class="fas fa-hourglass-half"></i>
+                    </div>
+                    <h3>Make It Big It Take Times</h3>
+                    <p>Real wealth accumulation in trading happens gradually. Be patient, consistent, and understand that sustainable growth requires time.</p>
+                </div>
+                
+                <div class="rule-card">
+                    <div class="rule-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Add Only On A Winning Position</h3>
+                    <p>Pyramid into winning trades, not losing ones. Increase position size only when the market proves you right.</p>
+                </div>
             </div>
-            <div class="copyright">
-                <p>&copy; 2023 AlphaSignals. All rights reserved. Trading involves substantial risk of loss and is not suitable for every investor. Past performance is not indicative of future results.</p>
+            
+            <div class="warning-note">
+                <h4>⚠️ The Golden Rule of Trading</h4>
+                <p><strong>Risk/Reward is the mother of becoming a master in trading.</strong> Always maintain at least a 1:2 risk-reward ratio. Your potential profit should always be at least twice your potential loss. This single principle separates professional traders from gamblers.</p>
             </div>
-        </div>
-    </footer>
-
+            
+        </section>
+        
+    </div>
+    
     <script>
-        // Create background trading elements
         document.addEventListener('DOMContentLoaded', function() {
-            const bgElements = document.getElementById('bgElements');
+            // Create realistic candlestick charts
+            const charts = document.querySelectorAll('.candlestick-chart');
             
-            // Add trading lines
-            for (let i = 0; i < 20; i++) {
-                const line = document.createElement('div');
-                line.className = 'trading-line';
-                line.style.left = `${Math.random() * 100}%`;
-                line.style.top = `${Math.random() * 100}%`;
-                line.style.width = `${50 + Math.random() * 200}px`;
-                line.style.transform = `rotate(${Math.random() * 360}deg)`;
-                line.style.opacity = `${0.1 + Math.random() * 0.2}`;
-                bgElements.appendChild(line);
-            }
-            
-            // Add trading dots
-            for (let i = 0; i < 60; i++) {
-                const dot = document.createElement('div');
-                dot.className = 'trading-dot';
-                dot.style.left = `${Math.random() * 100}%`;
-                dot.style.top = `${Math.random() * 100}%`;
-                dot.style.opacity = `${0.1 + Math.random() * 0.2}`;
-                bgElements.appendChild(dot);
-            }
-            
-            // Mobile menu toggle
-            const mobileMenu = document.querySelector('.mobile-menu');
-            const nav = document.querySelector('nav ul');
-            
-            mobileMenu.addEventListener('click', function() {
-                nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
-                if (nav.style.display === 'flex') {
-                    nav.style.flexDirection = 'column';
-                    nav.style.position = 'absolute';
-                    nav.style.top = '100%';
-                    nav.style.left = '0';
-                    nav.style.right = '0';
-                    nav.style.backgroundColor = '#000000';
-                    nav.style.padding = '2rem';
-                    nav.style.gap = '1.5rem';
-                    nav.style.zIndex = '1000';
+            charts.forEach(chart => {
+                const chartWidth = chart.offsetWidth;
+                const chartHeight = chart.offsetHeight;
+                
+                // Create grid lines
+                const grid = chart.querySelector('.chart-grid');
+                for (let i = 0; i <= 10; i++) {
+                    // Horizontal lines
+                    const hLine = document.createElement('div');
+                    hLine.className = 'grid-line horizontal';
+                    hLine.style.top = `${(i * 10)}%`;
+                    grid.appendChild(hLine);
+                    
+                    // Vertical lines
+                    const vLine = document.createElement('div');
+                    vLine.className = 'grid-line vertical';
+                    vLine.style.left = `${(i * 10)}%`;
+                    grid.appendChild(vLine);
+                }
+                
+                // Create candlesticks
+                const candlestickCount = 20;
+                const candlestickWidth = 6;
+                const spacing = chartWidth / candlestickCount;
+                
+                for (let i = 0; i < candlestickCount; i++) {
+                    const candlestick = document.createElement('div');
+                    candlestick.className = 'candlestick';
+                    
+                    // Random green or red
+                    const isGreen = Math.random() > 0.4;
+                    candlestick.classList.add(isGreen ? 'green' : 'red');
+                    
+                    // Random height (30-90% of chart)
+                    const height = Math.random() * 60 + 30;
+                    
+                    // Random position (some up, some down)
+                    const top = Math.random() * (100 - height);
+                    
+                    // Position
+                    const left = i * spacing + 10;
+                    
+                    candlestick.style.width = `${candlestickWidth}px`;
+                    candlestick.style.height = `${height}%`;
+                    candlestick.style.left = `${left}px`;
+                    candlestick.style.top = `${top}%`;
+                    
+                    chart.appendChild(candlestick);
+                    
+                    // Add wick (thin line above/below)
+                    const wick = document.createElement('div');
+                    wick.className = 'candlestick wick';
+                    wick.style.background = isGreen ? '#10b981' : '#ef4444';
+                    wick.style.width = '1px';
+                    wick.style.height = `${Math.random() * 15 + 5}px`;
+                    wick.style.left = `${left + candlestickWidth/2 - 0.5}px`;
+                    
+                    if (Math.random() > 0.5) {
+                        // Wick above
+                        wick.style.top = `${top - parseFloat(wick.style.height)}%`;
+                    } else {
+                        // Wick below
+                        wick.style.top = `${top + height}%`;
+                    }
+                    
+                    chart.appendChild(wick);
                 }
             });
             
-            // Smooth scrolling for anchor links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    if (targetId === '#') return;
-                    
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        window.scrollTo({
-                            top: targetElement.offsetTop - 80,
-                            behavior: 'smooth'
-                        });
+            // Animate candlesticks
+            function animateCandlesticks() {
+                const candlesticks = document.querySelectorAll('.candlestick:not(.wick)');
+                
+                candlesticks.forEach((candlestick, index) => {
+                    setTimeout(() => {
+                        // Random height change
+                        const currentHeight = parseFloat(candlestick.style.height);
+                        const newHeight = Math.random() * 60 + 30;
                         
-                        // Close mobile menu if open
-                        if (window.innerWidth <= 768 && nav.style.display === 'flex') {
-                            nav.style.display = 'none';
+                        // Smooth transition
+                        candlestick.style.transition = 'height 1.5s ease';
+                        candlestick.style.height = `${newHeight}%`;
+                        
+                        // Randomly change color
+                        if (Math.random() > 0.8) {
+                            const isGreen = Math.random() > 0.5;
+                            candlestick.className = 'candlestick ' + (isGreen ? 'green' : 'red');
                         }
+                        
+                        // Reset transition
+                        setTimeout(() => {
+                            candlestick.style.transition = '';
+                        }, 1500);
+                        
+                    }, index * 100);
+                });
+            }
+            
+            // Start animation
+            setInterval(animateCandlesticks, 4000);
+            
+            // Animate stats
+            const stats = document.querySelectorAll('.stat-number');
+            stats.forEach(stat => {
+                const finalValue = stat.textContent;
+                stat.textContent = '0';
+                
+                let counter = 0;
+                const increment = finalValue.includes('%') ? 0.1 : 1;
+                const target = parseFloat(finalValue);
+                
+                const timer = setInterval(() => {
+                    counter += increment;
+                    stat.textContent = finalValue.includes('%') 
+                        ? counter.toFixed(1) + '%' 
+                        : Math.floor(counter);
+                    
+                    if (counter >= target) {
+                        stat.textContent = finalValue;
+                        clearInterval(timer);
+                    }
+                }, 30);
+            });
+            
+            // Telegram button animation
+            const telegramButtons = document.querySelectorAll('.telegram-button, .telegram-cta-button');
+            telegramButtons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    const icon = this.querySelector('i');
+                    if (icon) {
+                        icon.style.transform = 'scale(1.2)';
+                        setTimeout(() => {
+                            icon.style.transform = 'scale(1)';
+                        }, 300);
                     }
                 });
-            });
-        });
-    </script>
-</body>
-</html>
+                
+                // Click tracking
+                button.addEventListener
